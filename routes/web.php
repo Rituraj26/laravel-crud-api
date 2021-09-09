@@ -18,9 +18,73 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/token', function() {
+    return csrf_token();
+});
+
 Route::get('/read', function() {
     $posts = Post::all();
+
     foreach($posts as $post) {
-        return $post->title;
+        echo $post->title;
     }
+});
+
+Route::get('/find', function() {
+    $posts = Post::where('is_admin', 1)->orderByDesc('id')->take(2)->get();
+
+    foreach($posts as $post) {
+        echo $post->title;
+        echo "<br />";
+    }
+});
+
+Route::post('/insert', function() {
+    $post = new Post;
+    $post->title = 'Second record';
+    $post->body = 'A second record has been added';
+    $post->is_admin = 1;
+
+    $post->save();
+});
+
+Route::post('/create', function() {
+    $post = Post::create([
+        'title' => 'New record using create',
+        'body' => 'A new record has been inserted using create method'
+    ]);
+});
+
+Route::put('/update', function() {
+    $post = Post::where('id', 1)->where('is_admin', 1)->update([
+        'title' => 'This is the first updated record',
+        'body' => 'The first record has been updated using the update method'
+    ]);
+});
+
+Route::delete('/delete', function() {
+    $post = Post::where('id', 6)->delete();
+});
+
+Route::delete('/softdelete', function() {
+    $post = Post::where('id', 6)->delete();
+});
+
+Route::get('/restoretrash', function() {
+    // $post = Post::withTrashed()->where('id', 6)->restore();
+    $post = Post::withTrashed()->history()->restore();
+    return $post;
+});
+
+Route::get('/checkiftrash', function() {
+    $post = Post::withTrashed()->whereNotNull('deleted_at')->get();
+
+    return $post;
+});
+
+
+Route::delete('/forcedelete', function() {
+    $post = Post::withTrashed()->whereNotNull('deleted_at')->forceDelete();
+
+    return $post;
 });
