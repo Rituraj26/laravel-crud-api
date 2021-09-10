@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,8 @@ use App\Models\User;
 
 Route::post('/user', function() {
     $user = User::create([
-        'name' => 'John Doe',
-        'email' => 'johndoe@gmail.com',
+        'name' => 'Husky Doe',
+        'email' => 'huskydoe@gmail.com',
         'password' => '123456'
     ]);
 });
@@ -126,4 +127,26 @@ Route::get('/user/{id}/latestpost', function($id) {
 Route::get('/user/{id}/oldestpost', function($id) {
     $post = User::find($id)->oldestPost()->get();
     return $post;
+});
+
+// Many to many relationship
+
+
+// Get roles of the user
+Route::get('/user/{id}/roles', function($id) {
+    $user = User::find($id)->roles()->get();
+    return $user;
+}); 
+
+// Get users of the roles
+Route::get('/role/{id}/users', function($id) {
+    $user = Role::find($id)->users()->get();
+    return $user;
+}); 
+
+// Create role
+Route::post('/role', function() {
+    $role = Role::create([
+        'role_name' => 'Sales Manager'
+    ]);
 });
