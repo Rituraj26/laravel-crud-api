@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use App\Models\Post;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// User Routes
+
+Route::post('/user', function() {
+    $user = User::create([
+        'name' => 'John Doe',
+        'email' => 'johndoe@gmail.com',
+        'password' => '123456'
+    ]);
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -87,4 +98,12 @@ Route::delete('/forcedelete', function() {
     $post = Post::withTrashed()->whereNotNull('deleted_at')->forceDelete();
 
     return $post;
+});
+
+// One to one relationship
+
+Route::get('/user/{id}/post', function($id) {
+    // return Post::find('user_id', $id)->user;
+    return User::find($id)->post;
+    
 });
