@@ -103,7 +103,27 @@ Route::delete('/forcedelete', function() {
 // One to one relationship
 
 Route::get('/user/{id}/post', function($id) {
-    // return Post::find('user_id', $id)->user;
-    return User::find($id)->post;
-    
+    return Post::find($id)->user;
+    // return User::find($id)->post;
+});
+
+// One to many Relationship
+
+Route::get('/user/{id}/posts', function($id) {
+    $posts = User::find($id)->posts;
+    foreach($posts as $post) {
+        echo $post;
+    }
+});
+
+// Get latest and oldest post
+
+Route::get('/user/{id}/latestpost', function($id) {
+    $post = User::find($id)->latestPost()->get();
+    return $post;
+});
+
+Route::get('/user/{id}/oldestpost', function($id) {
+    $post = User::find($id)->oldestPost()->get();
+    return $post;
 });
