@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Post;
 use App\Models\Role;
+use App\Models\Image;
 
 class User extends Authenticatable
 {
@@ -43,23 +44,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function post() {
+    public function post()
+    {
         return $this->hasOne(Post::class);
     }
 
-    public function posts() {
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
 
-    public function latestPost() {
+    public function latestPost()
+    {
         return $this->hasOne(Post::class)->latestOfMany();
     }
 
-    public function oldestPost() {
+    public function oldestPost()
+    {
         return $this->hasOne(Post::class)->oldestOfMany();
     }
 
-    public function roles() {
+    public function roles()
+    {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }
